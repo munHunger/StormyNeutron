@@ -1,5 +1,6 @@
 package stormyNeutron.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -149,6 +150,26 @@ public class QuadTree<E>
 	}
 	
 	/**
+	 * Searches for elements whose points are in the search space
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return A list of objects with coordinates inside the search space
+	 */
+	public List<E> get(int x, int y, int width, int height)
+	{
+		List<E> toReturn = new ArrayList<E>();
+		if(inCurrent(x, y, width, height))
+			for(Element<E> e : elements)
+				if(contains(e.x, e.y, x, y, width, height))
+					toReturn.add(e.obj);
+		for(QuadTree<E> q : getChildren(x, y, width, height))
+			toReturn.addAll(q.get(x, y, width, height));
+		return toReturn;
+	}
+	
+	/**
 	 * Removes the child responsible for the area containing the x/y coordinate.<br />
 	 * If, after removing that child the current level becomes unused(no elements at this level or in any nodes below it) this node will be removed if possible(not possible for root).<br />
 	 * @param x
@@ -203,6 +224,61 @@ public class QuadTree<E>
 	}
 	
 	/**
+	 * Returns a list of all quadrants that contains any point of the search space
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return
+	 */
+	private List<QuadTree<E>> getChildren(int x, int y, int width, int height)
+	{
+		List<QuadTree<E>> returnTree = new ArrayList<>();
+		if(upperLeftTree != null && contains(x, y, width, height, upperLeftTree.x, upperLeftTree.y, upperLeftTree.width, upperLeftTree.height))
+			returnTree.add(upperLeftTree);
+		if(upperRightTree != null && contains(x, y, width, height, upperRightTree.x, upperRightTree.y, upperRightTree.width, upperRightTree.height))
+			returnTree.add(upperRightTree);
+		if(bottomLeftTree != null && contains(x, y, width, height, bottomLeftTree.x, bottomLeftTree.y, bottomLeftTree.width, bottomLeftTree.height))
+			returnTree.add(bottomLeftTree);
+		if(bottomRightTree != null && contains(x, y, width, height, bottomRightTree.x, bottomRightTree.y, bottomRightTree.width, bottomRightTree.height))
+			returnTree.add(bottomRightTree);
+		return returnTree;
+	}
+
+	/**
+	 * Returns true if any point in the search space is covered by the space
+	 * @param xa
+	 * @param ya
+	 * @param widtha
+	 * @param heighta
+	 * @param xb
+	 * @param yb
+	 * @param widthb
+	 * @param heightb
+	 * @return
+	 */
+	private boolean contains(int xa, int ya, int widtha, int heighta, int xb, int yb, int widthb, int heightb)
+	{
+		return contains(xa, ya, xb, yb, widthb, heightb) || contains(xa+widtha, ya, xb, yb, widthb, heightb)
+				|| contains(xa, ya+heighta, xb, yb, widthb, heightb) || contains(xa+widtha, ya+heighta, xb, yb, widthb, heightb);
+	}
+	
+	/**
+	 * Checks if a point is covered by a space
+	 * @param xa search coordinate
+	 * @param ya search coordinate
+	 * @param xb space coordinate
+	 * @param yb space coordinate
+	 * @param widthb space width
+	 * @param heightb space height
+	 * @return true iff the search coordinate is inside the space(edge inclusive)
+	 */
+	private boolean contains(int xa, int ya, int xb, int yb, int widthb, int heightb)
+	{
+		return (xa >= xb && xa <= xb+widthb) && (ya >= yb && ya <=yb+heightb);
+	}
+	
+	/**
 	 * Checks if the x/y coordinate falls on any of the mid-lines of the current tree.
 	 * @param x coordinate
 	 * @param y coordinate
@@ -211,5 +287,20 @@ public class QuadTree<E>
 	private boolean inCurrent(int x, int y)
 	{
 		return x == (this.x + this.width/2) || y == (this.y + this.height/2);
+	}
+	
+	/**
+	 * Checks if the space is covered by this node
+	 * @param x
+	 * @param y
+	 * @param width
+	 * @param height
+	 * @return true iff the space is crossing any of the mid-lines. The space is inclusive on all 4 edges
+	 */
+	private boolean inCurrent(int x, int y, int width, int height)
+	{
+		int xLine = this.x + this.width/2;
+		int yLine = this.x + this.height/2;
+		return (x <= xLine && x+width >= xLine) || (y <= yLine && y+height >= yLine); 
 	}
 }
