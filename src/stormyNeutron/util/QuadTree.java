@@ -88,6 +88,7 @@ public class QuadTree<E>
 	 */
 	private QuadTree(int x, int y, int width, int height, QuadTree<E> parent)
 	{
+		this.elements = new ArrayList<>();
 		this.x = x;
 		this.y = y;
 		this.width = width;
@@ -209,16 +210,16 @@ public class QuadTree<E>
 		if(x < (this.x + this.width/2))
 		{
 			if(y < (this.y + this.height/2))
-				returnTree = (createChild && upperLeftTree == null) ? new QuadTree<E>(x, y, width/2, height/2) : upperLeftTree;
+				returnTree = upperLeftTree = (createChild && upperLeftTree == null) ? new QuadTree<E>(this.x, this.y, width/2, height/2, this) : upperLeftTree;
 			else
-				returnTree = (createChild && bottomLeftTree == null) ? new QuadTree<E>(x, y+height/2, width/2, height/2) : bottomLeftTree;
+				returnTree = bottomLeftTree = (createChild && bottomLeftTree == null) ? new QuadTree<E>(this.x, this.y+height/2, width/2, height/2, this) : bottomLeftTree;
 		}
 		else
 		{
 			if(y < (this.y + this.height/2))
-				returnTree = (createChild && upperRightTree == null) ? new QuadTree<E>(x+width/2, y, width/2, height/2) : upperRightTree;
+				returnTree = upperRightTree = (createChild && upperRightTree == null) ? new QuadTree<E>(this.x+width/2, this.y, width/2, height/2, this) : upperRightTree;
 			else
-				returnTree = (createChild && bottomRightTree == null) ? new QuadTree<E>(x+width/2, y+height/2, width/2, height/2) : bottomRightTree;
+				returnTree = bottomRightTree = (createChild && bottomRightTree == null) ? new QuadTree<E>(this.x+width/2, this.y+height/2, width/2, height/2, this) : bottomRightTree;
 		}
 		return returnTree;
 	}
@@ -259,8 +260,8 @@ public class QuadTree<E>
 	 */
 	private boolean contains(int xa, int ya, int widtha, int heighta, int xb, int yb, int widthb, int heightb)
 	{
-		return contains(xa, ya, xb, yb, widthb, heightb) || contains(xa+widtha, ya, xb, yb, widthb, heightb)
-				|| contains(xa, ya+heighta, xb, yb, widthb, heightb) || contains(xa+widtha, ya+heighta, xb, yb, widthb, heightb);
+		return 	xa < xb+widthb && xa+widtha > xb &&
+				ya < yb+heightb && ya+heighta > yb;
 	}
 	
 	/**
@@ -275,7 +276,7 @@ public class QuadTree<E>
 	 */
 	private boolean contains(int xa, int ya, int xb, int yb, int widthb, int heightb)
 	{
-		return (xa >= xb && xa <= xb+widthb) && (ya >= yb && ya <=yb+heightb);
+		return (xa >= xb && xa <= xb+widthb) && (ya >= yb && ya <= yb+heightb);
 	}
 	
 	/**

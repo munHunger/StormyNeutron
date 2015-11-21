@@ -46,5 +46,4 @@ public class Tuple <E, V>
 	{
 		return obj2;
 	}
-	
 }
