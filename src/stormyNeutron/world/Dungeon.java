@@ -30,6 +30,11 @@ public class Dungeon
 		return tiles.get(0, 0, width, height);
 	}
 	
+	public List<Tile> getAdjacentTiles(int x, int y)
+	{
+		return tiles.get(x-1, y-1, 2, 2);
+	}
+	
 	public List<Tuple<Integer,Integer>> getEmptyAdjacentPositions()
 	{
 		List<Tuple<Integer,Integer>> positions = new ArrayList<>();
