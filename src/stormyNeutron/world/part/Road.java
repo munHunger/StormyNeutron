@@ -6,9 +6,9 @@ import stormyNeutron.util.Invoke;
 import stormyNeutron.util.Tuple;
 import stormyNeutron.world.Dungeon;
 
-public class Grass extends Tile 
+public class Road extends Tile
 {
-	public Grass(int x, int y)
+	public Road(int x, int y)
 	{
 		super(x,y);
 	}
@@ -25,19 +25,19 @@ public class Grass extends Tile
 					if(t instanceof Entrance)
 					{
 						List<Tile> entranceAdjecency = arg.getFirst().getAdjacentTiles(arg.getSecond().getFirst(), arg.getSecond().getSecond());
-						return 1f-((entranceAdjecency.size())/2f);
+						return 1f-((entranceAdjecency.size())/4f);
 					}
-					else if(t instanceof Grass)
-						return 0.85f;
-				return 0.75f;
+					else if(t instanceof Road)
+						return 0.8f;
+				return 0.05f;
 			}
 			
-		}, new Grass(0,0)));
+		}, new Road(0,0)));
 	}
 	
 	@Override
 	public Tile cloneTo(int x, int y)
 	{
-		return new Grass(x, y);
+		return new Road(x, y);
 	}
 }
