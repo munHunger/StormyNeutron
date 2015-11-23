@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -26,6 +27,7 @@ public class OBJLoader {
 	public static Model loadModel(File modelFile) throws FileNotFoundException{
 		BufferedReader in = new BufferedReader(new FileReader(modelFile));
 		String line = null;
+		String mtllib = "";
 		Model model = new Model();
 		try {
 			while((line = in.readLine()) != null){
@@ -55,10 +57,14 @@ public class OBJLoader {
 					model.addFace(face);
 				}
 				else if(line.startsWith("o ")) { //Line is a new object header
-					String[] colorComponents = line.split(" ")[1].split("_");
-					//Vector3f color = new Vector3f(Float.parseFloat(colorComponents[1])/255.0f, Float.parseFloat(colorComponents[2])/255.0f, Float.parseFloat(colorComponents[3])/255.0f);
-					Vector3f color = new Vector3f(0.5f, 0.75f, 1f);
-					model.newModelPart(color);
+					model.newModelPart();
+				}
+				else if(line.startsWith("mtllib"))
+					mtllib = line.split(" ")[1];
+				else if(line.startsWith("usemtl "))
+				{
+					String parent = modelFile.getParent();
+					model.getLatestPart().setColor(loadMTL(parent + "/" + mtllib, line.split(" ")[1]));
 				}
 			}
 			in.close();
@@ -67,5 +73,28 @@ public class OBJLoader {
 			e.printStackTrace();
 		}
 		return model;
+	}
+	
+	public static Vector3f loadMTL(String path, String mtlName)
+	{
+		try (BufferedReader in = new BufferedReader(new FileReader(path)))
+		{
+			String line = null;
+			Model model = new Model();
+			String[] kd = null;
+			while((line = in.readLine()) != null)
+			{
+				if(line.startsWith("newmtl ") && line.contains(mtlName))
+				{
+					String ns = in.readLine();
+					String ka = in.readLine();
+					kd = in.readLine().split(" ");
+					String ks = in.readLine();
+				}
+			}
+			return new Vector3f(Float.parseFloat(kd[1]), Float.parseFloat(kd[2]), Float.parseFloat(kd[3]));
+		}
+		catch(IOException e) { e.printStackTrace(); }
+		return new Vector3f(1.0f, 1.0f, 1.0f);
 	}
 }

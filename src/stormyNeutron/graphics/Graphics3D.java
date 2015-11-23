@@ -45,10 +45,6 @@ public class Graphics3D implements Runnable{
 	private RenderQueue renderQueue = new RenderQueue();
 
 	private AnimationEventController animationEventController = new AnimationEventController(40); //24 FPS
-	public static void main(String[] args)
-	{
-		new Graphics3D().run();
-	}
 	
 	public void setRenderQueue(RenderQueue rq)
 	{
@@ -82,10 +78,11 @@ public class Graphics3D implements Runnable{
 		glMatrixMode(GL_MODELVIEW);
 		ready = true;
 		long lastTime = 0;
-		updateLight(GL_LIGHT1, new Vector3f(0.0f,0.0f,32.0f), new Vector3f(0.3f, 0.35f, 0.45f));
+		updateLight(GL_LIGHT1, new Vector3f(0.0f,0.0f,32.0f), new Vector3f(0.9f, 0.75f, 0.75f));
 		while(!Display.isCloseRequested()){
 			processInput();
 			long time = System.currentTimeMillis();
+			glClearColor(0.5f, 0.8f, 1.0f, 1.0f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			glPushAttrib(GL_TRANSFORM_BIT);
 			glPushMatrix();
@@ -291,7 +288,8 @@ public class Graphics3D implements Runnable{
 		glLight(GL_LIGHT0, GL_DIFFUSE, (FloatBuffer)temp.asFloatBuffer().put(new float[]{1.0f, 1.0f, 1.0f, 1.0f}).flip());
 		glLight(GL_LIGHT0, GL_SPOT_DIRECTION, (FloatBuffer)temp.asFloatBuffer().put(new float[]{0.0f, 0.0f, 0.0f, 1.0f}).flip());
 		glLight(GL_LIGHT0, GL_SPOT_EXPONENT, (FloatBuffer)temp.asFloatBuffer().put(new float[]{0.0f, 0.0f, 0.0f, 1.0f}).flip());
-		glLight(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, (FloatBuffer)temp.asFloatBuffer().put(new float[]{0.0001f, 0.0001f, 0.0001f, 1.0f}).flip());
+		glLight(GL_LIGHT1, GL_DIFFUSE, (FloatBuffer)temp.asFloatBuffer().put(new float[]{0.0f, 0.0f, 0.0f, 0.0f}).flip());
+		glLight(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, (FloatBuffer)temp.asFloatBuffer().put(new float[]{0.000001f, 0.000001f, 0.000001f, 1.0f}).flip());
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 		glEnable(GL_LIGHT1);

@@ -49,7 +49,7 @@ public class Model {
 	/**
 	 * Creates a new modelPart with default colors 1.5f,0.5f,0.5f
 	 */
-	private void newModelPart() {
+	public void newModelPart() {
 		modelParts.add(new ModelPart(new Vector3f(1.5f, 0.5f, 0.5f)));
 	}
 	
@@ -67,6 +67,14 @@ public class Model {
 	 */
 	public ArrayList<ModelPart> getModelParts(){
 		return modelParts;
+	}
+	
+	/**
+	 * @return The latest added modelPart
+	 */
+	public ModelPart getLatestPart()
+	{
+		return modelParts.get(modelParts.size()-1);
 	}
 	
 	/**
