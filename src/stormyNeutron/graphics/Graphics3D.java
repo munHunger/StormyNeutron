@@ -337,16 +337,14 @@ public class Graphics3D implements Runnable{
 
 			Display.setTitle("Stormy Neutron");
 
-			/*
+			
 			ByteBuffer[] iconList = new ByteBuffer[2];
-			iconList[0] = loadIcon("res/ICON16.png");
+			iconList[0] = loadIcon("res/ICON32.png");
 			iconList[1] = loadIcon("res/ICON32.png");
 			Display.setIcon(iconList);
-			*/
 
 			Display.create();
-		} catch (LWJGLException e) {
-			// TODO Auto-generated catch block
+		} catch (LWJGLException | IOException e) {
 			e.printStackTrace();
 		}
 	}

@@ -5,7 +5,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import org.lwjgl.util.vector.Vector3f;
 
@@ -80,16 +79,14 @@ public class OBJLoader {
 		try (BufferedReader in = new BufferedReader(new FileReader(path)))
 		{
 			String line = null;
-			Model model = new Model();
 			String[] kd = null;
 			while((line = in.readLine()) != null)
 			{
 				if(line.startsWith("newmtl ") && line.contains(mtlName))
 				{
-					String ns = in.readLine();
-					String ka = in.readLine();
+					in.readLine();
+					in.readLine();
 					kd = in.readLine().split(" ");
-					String ks = in.readLine();
 				}
 			}
 			return new Vector3f(Float.parseFloat(kd[1]), Float.parseFloat(kd[2]), Float.parseFloat(kd[3]));

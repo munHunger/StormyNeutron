@@ -3,7 +3,6 @@ package stormyNeutron.graphics;
 import java.util.ArrayList;
 import java.util.List;
 
-import stormyNeutron.graphics.utilities.Model;
 import stormyNeutron.world.Dungeon;
 import stormyNeutron.world.part.Tile;
 
