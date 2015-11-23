@@ -1,5 +1,6 @@
 package stormyNeutron.world.part;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import stormyNeutron.util.Invoke;
@@ -39,5 +40,15 @@ public class Road extends Tile
 	public Tile cloneTo(int x, int y)
 	{
 		return new Road(x, y);
+	}
+
+	@Override
+	public List<String> getResources()
+	{
+		List<String> resources = new ArrayList<>();
+		resources.add("RoadTile001");
+		resources.add("RoadTile002");
+		resources.add("RoadTile003");
+		return resources;
 	}
 }

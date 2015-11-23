@@ -1,5 +1,7 @@
 package stormyNeutron.world;
 
+import stormyNeutron.graphics.Graphics3D;
+import stormyNeutron.graphics.RenderQueue;
 import stormyNeutron.util.Invoke;
 import stormyNeutron.util.Tuple;
 import stormyNeutron.world.part.Entrance;
@@ -17,21 +19,45 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
+import org.lwjgl.util.vector.Vector3f;
+
 public class Generator 
 {
 	public static void main(String[] args)
 	{
 		Grass.init();
 		Road.init();
+
+		final Graphics3D g3d = new Graphics3D();
+		new Thread(g3d).start();
+		while(!g3d.ready())
+		{
+			try { Thread.sleep(10); } 
+			catch (InterruptedException e){ e.printStackTrace(); }
+		}
+		g3d.getCamera().setPosition(new Vector3f(16f*16f, 16f*16f, 32f));
+		
 		JFrame frame = new JFrame("Map generator");
 		@SuppressWarnings("serial")
 		JPanel panel = new JPanel()
 		{
+			private boolean firstRun = true;
 			public void paintComponent(Graphics g)
 			{
+				if(!firstRun)
+				{
+					try
+					{
+						Thread.sleep(10000);
+					}
+					catch(Exception e){}
+				}
+				firstRun = false;
 				super.paintComponent(g);
 				super.setBackground(Color.GRAY);
-				List<Tile> tiles = generateDungeon(64).getTiles();
+				Dungeon d = generateDungeon(64);
+				g3d.setRenderQueue(new RenderQueue(d));
+				List<Tile> tiles = d.getTiles();
 				g.setColor(Color.CYAN);
 				int zoom = 10;
 				for(Tile t : tiles)
@@ -44,11 +70,6 @@ public class Generator
 						g.setColor(Color.BLACK);
 					g.fillRect(t.getX()*zoom, t.getY()*zoom, zoom, zoom);
 				}
-				try
-				{
-					Thread.sleep(1000);
-				}
-				catch(Exception e){}
 				repaint();
 			}
 		};

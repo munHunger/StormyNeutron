@@ -7,7 +7,7 @@ import stormyNeutron.util.Invoke;
 import stormyNeutron.util.Tuple;
 import stormyNeutron.world.Dungeon;
 
-public abstract class Tile 
+public abstract class Tile implements Renderable
 {
 	/**
 	 * Each Tile subclass must add an entry to this list.

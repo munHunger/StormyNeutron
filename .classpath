@@ -8,5 +8,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/lwjgl/jar/lwjgl_util.jar"/>
+	<classpathentry kind="lib" path="lib/lwjgl/jar/slick.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
